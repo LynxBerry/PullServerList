@@ -13,106 +13,6 @@ function ConvertFromExcelToRecords
 
 }
 
-function GetArrayofData # return array of data in target column
-{
-    param(
-        [array] $dataItems,
-
-        #filter conditions
-        # ordered hashtable
-        [hashtable] $filters,
-
-        # target column to return
-        [string] $targetCol
-    )
-
-
-    function InnerFilter
-    {
-        param(
-            [array] $dataItems,
-            # ordered hasntable
-            [hashtable] $filters
-
-        )
-
-        # if still have filters
-        if ($filters.Count -gt 0 )
-        {
-            #write-host "rabit"
-
-             # Use first filter to filter
-            $filter = $($filters.GetEnumerator())[0]
-            $column = $filter.key
-            $value = $filter.value
-
-            # test code
-            # write-host "Count of dataItems $($dataItems.Count)"
-            # write-host "column: $column"
-            # write-host "value: $value"
-
-            #Big mistake
-            $tmpFilters = $filters.Clone()
-            $tmpFilters.Remove($filter.key)
-            InnerFilter -dataItems @($dataItems | ?{ $_.$column -eq $value}) -filters $tmpFilters
-
-            return
-
-        }
-
-        #write-host "rabit0"
-        #write-host "$($dataItems.count)"
-        $dataItems
-
-
-    }
-
-    @(InnerFilter -dataItems $dataItems -filters $filters | %{ $_.$targetCol} | sort -unique | ?{ $_.trim() -ne ''})
-
-
-}
-
-function ProcessData
-{
-    param(
-        [array] $dataItems,
-
-        # Name of PAT Sequence Column
-        [string] $nameSeqCol,
-
-        # Name of Patch Batch Column
-        [string] $namePatchBatchCol,
-
-        # Name of Server Name Column
-        [string] $nameServerNameCol
-    )
-
-
-    # write-host "yyyxxx$namePatchBatchCol"
-    # Data Structure holding resulted data
-    [hashtable] $hashDataTree = @{}
-
-    foreach($objPatSeq in @(GetArrayofData -dataItems $dataItems -filters @{} -targetCol $nameSeqCol))
-    {
-        $hashDataTree[$objPatSeq] = @{}
-            #write-host "yyy$namePatchBatchCol"
-            #write-host "zzz$nameSeqCol"
-
-        foreach($objPatBatch in @(GetArrayofData -dataItems $dataItems -filters @{"$nameSeqCol" = "$objPatSeq"} -targetCol $namePatchBatchCol))
-        {
-
-            # Test output
-            if ($test) { write-host "$objPatSeq $objPatPatch" }
-
-            $hashDataTree[$objPatSeq][$objPatBatch] = @(GetArrayofData -dataItems $dataItems -filters @{"$nameSeqCol" = "$objPatSeq"; "$namePatchBatchCol" = "$objPatBatch"} -targetCol $nameServerNameCol);
-        }
-
-    }
-
-    $hashDataTree
-    # write-host "xxx"
-
-}
 
 function ProcessData2
 {
@@ -175,8 +75,6 @@ function ProcessData2
 
 }
 
-
-
 # Function Factory
 # Return function.
 function GenAction
@@ -202,7 +100,6 @@ function GenAction
 	}.GetNewClosure()
 
 }
-
 
 function TraverseDataTree
 {
