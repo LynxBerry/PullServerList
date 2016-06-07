@@ -228,7 +228,7 @@ function TraverseDataTree
 # has side effects.
 function TimeTag
 {
-    get-date -f 'MMddyyy_hh_mm_ss'
+    get-date -f 'MMddyyy_HH_mm_ss'
 
 }
 
