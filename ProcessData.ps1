@@ -94,7 +94,9 @@ function GenAction
 		}
 		elseif($node.value -is [array]) # If the node refers to array, it means the node itself is file.txt. We need to create a file.txt of it.
 		{
-			$node.value >  $(join-path $parentPath $(join-path $path $($node.key + ".txt")))
+			# $node.value >  $(join-path $parentPath $(join-path $path $($node.key + ".txt")))
+            # Use encoding ascii for output file otherwise the reader cannot work properly.
+            $node.value | Out-File -Encoding ascii -FilePath $(join-path $parentPath $(join-path $path $($node.key + ".txt")))
 		}
 
 	}.GetNewClosure()
