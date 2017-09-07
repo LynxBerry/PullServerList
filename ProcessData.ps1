@@ -91,6 +91,9 @@ function GenAction
 		if($node.value -is [hashtable]) # If the node refers to hashtable, it means the node itself is folder. We need to make folder of it.
 		{
 			mkdir $(join-path $parentPath $(join-path $path $node.key))
+            #debug
+            write-host ">>--mkdir trace:"
+            write-host $(join-path $parentPath $(join-path $path $node.key))
 		}
 		elseif($node.value -is [array]) # If the node refers to array, it means the node itself is file.txt. We need to create a file.txt of it.
 		{

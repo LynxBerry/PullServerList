@@ -8,6 +8,10 @@ function CopyFile
 
     )
 
+    # Try to access the source share folder to warm up the access using Windows Shell COM object
+    $o = new-object -com Shell.Application
+    $folder = $o.NameSpace($strSourceFolder)
+
     # specify timeout
     # retry one time
     Robocopy $strSourceFolder $strTargetFolder $strSourceFileName /R:1
