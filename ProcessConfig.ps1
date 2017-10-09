@@ -9,7 +9,7 @@ function ReadConfigFromFile
 
     #
     @{
-        "dirSource" = '\\sharepoint\sites\commerceteam\Shanghai\Ops\CTP OPS Document Library\Monthly Security Patching';
+        "dirSource" = 'C:\Users\stevensh\Microsoft\TechOpsShanghai - MonthlySecurityPatching';
         "nameSourceFile" = 'Master SH Patching Server Inventory_Update.xlsx';
         # computed property
         "nameSourceFileFullPath" = "";
